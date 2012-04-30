@@ -1,7 +1,15 @@
 - include_stylesheet('admin/reader')
-= render_region :top 
+- content_for 'page_css' do
+  = css_for_readers_groups @readers
+= render_region :top
 
-#readers_table.outset      
+#readers_table.outset
+  #index_search_bar
+    - form_tag admin_readers_path, :method => "get" do
+      = label_tag(:q, "Search for:")
+      = text_field_tag(:q, params[:q])
+      = submit_tag("Search")
+
   %table#readers.index{:cellspacing=>"0", :border=>"0", :cellpadding=>"0"}
     %thead
       %thead
@@ -46,7 +54,7 @@
             
             - tbody.groups_cell do
               %td.reader_groups
-                = reader.groups.collect{|g| link_to(g.name, admin_group_url(g)) }.join("\n")
+                = pretty_group_links(reader.groups)
 
             - tbody.description_cell do
               - if Radiant.config['reader.show_descriptions?']

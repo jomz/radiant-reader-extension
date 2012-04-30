@@ -1,11 +1,12 @@
 require 'sanitize'
 require "sanitize/config/generous"
 require "snail_helpers"
+require 'color'
 
 module ReaderHelper
   include SnailHelpers
   include Admin::RegionsHelper
-  
+
   def standard_gravatar_for(reader=nil, url=nil)
     size = Radiant::Config['reader.gravatar_size'] || 40
     url ||= reader_url(reader)
@@ -24,7 +25,7 @@ module ReaderHelper
       image_tag gravatar_url(reader.email, gravatar_options), img_options
     end
   end
-  
+
   def link_to_reader(reader)
     if page = ReaderPage.first
       page.url_for(reader)
@@ -32,7 +33,7 @@ module ReaderHelper
       reader_url(reader)
     end
   end
-  
+
   def link_to_group(group)
     if page = group.homepage
       link_to group.name, page.url
@@ -40,7 +41,7 @@ module ReaderHelper
       link_to group.name, group_url(group)
     end
   end
-  
+
   def link_to_message(message)
     link_to message.subject, message_url(message)
   end
@@ -66,8 +67,8 @@ module ReaderHelper
     length = options[:length].to_i
     options[:omission] = '' unless words.size > length
     words[0..(length-1)].join(" ") + options[:omission]
-  end 
-  
+  end
+
   def pagination_and_summary_for(list, name='')
     %{<div class="pagination">
         #{will_paginate list, :container => false}
@@ -77,14 +78,14 @@ module ReaderHelper
       </div>
     }
   end
-    
+
   def pagination_summary(list, name='')
     total = list.total_entries
     start = list.offset + 1
     finish = ((list.offset + list.per_page) < list.total_entries) ? list.offset + list.per_page : list.total_entries
     t("reader_extension.showing_of_total", :count => total, :start => start, :finish => finish, :name => name, :names => name.pluralize)
   end
-  
+
   def message_preview(subject, body, reader)
     preview = <<EOM
 From: #{current_user.name} &lt;#{current_user.email}&gt;
@@ -117,11 +118,11 @@ EOM
     end
     options
   end
-  
+
   def friendly_date(datetime)
     I18n.l(datetime, :format => friendly_date_format(datetime)) if datetime
   end
-  
+
   def friendly_date_format(datetime)
     if datetime && date = datetime.to_date
       if (date.to_datetime == Date.today)
@@ -137,19 +138,19 @@ EOM
       end
     end
   end
-  
+
   def country_options_for_select(selected = nil, default_selected = Snail.home_country)
     usps_country_options_for_select(selected, default_selected)
   end
-  
+
   def group_options_for_select
     options_from_tree(Group.arrange).unshift([t("reader_extension.any_option"), nil])
   end
-  
+
   def parent_group_options_for_select(group=nil)
     options_from_tree(Group.arrange, :except => group).unshift([t("reader_extension.none_option"), nil])
   end
-  
+
   def email_link(address)
     mail_to address, nil, :encode => :hex, :replace_at => ' at ', :class => 'mailto'
   end
@@ -168,5 +169,35 @@ EOM
     end
     option_list.compact
   end
+
+  def pretty_groups(groups)
+    groups.map { |group| group_tag(group) }.join("\n")
+  end
+
+  def pretty_group_links(groups)
+    groups.map do |group|
+      link_to(group_tag(group), admin_group_path(group), :class => "group_link")
+    end.join("\n")
+  end
+
+  def group_tag(group)
+    content_tag(:span, group.name, :class => "group_tag #{group.name.parameterize}")
+  end
+
+  def css_for_readers_groups readers
+    # this should handle either a single reader, or an array being passed in:
+    groups = readers.map(&:groups).flatten
+    # remove any nils!:
+    groups = groups.compact
+
+    css = groups.map { |group|
+      group_name = group.name.parameterize #should take care of dumb inputs for us
+      hue = ((Math.sin(group.id*431.26570001)+1)/2)*20000 % 360
+      colour = Color::HSL.new(hue, 50, 68).html
+      hover_colour = Color::HSL.new(hue, 50, 85).html
+      ".group_tag.#{group_name} { background-color: #{colour}; } \na:hover .group_tag.#{group_name} { background-color: #{hover_colour}; }"
+    }.join("\n")
+  end
+
 end
 

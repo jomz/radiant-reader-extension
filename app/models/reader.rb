@@ -47,6 +47,7 @@ class Reader < ActiveRecord::Base
   named_scope :imported, :conditions => "old_id IS NOT NULL"
   named_scope :disabled, :conditions => "disabled = 1"
   named_scope :enabled, :conditions => "disabled = 0"
+  named_scope :search, lambda {|query| {:conditions => ["name LIKE ?", "%#{query}%"]}}
 
   named_scope :except, lambda { |readers|
     readers = [readers].flatten.compact

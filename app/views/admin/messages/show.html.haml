@@ -2,7 +2,7 @@
 - include_javascript('admin/reader')
 - body_classes << "reversed"
 
-= render_region :top 
+= render_region :top
 
 - render_region :header do |header|
   - header.title do
@@ -45,7 +45,7 @@
           = t("reader_extension.message_adhoc")
           - if @message.groups.any?
             = t("reader_extension.message_group_adhoc", :links => @message.groups.map{|g| link_to g.name, admin_group_url(g)}.to_sentence, :count => @message.groups.count)
-          
+
     - delivery.options do
       - unless @message.administrative?
         - form_for :message, @message, :url => deliver_admin_message_path(@message), :html => {"data-onsubmit_status"=>"Sending email messages&#8230;"} do |f|
@@ -54,37 +54,37 @@
           .radio_group
             %p
               = radio_button_tag 'delivery', 'all', true, :id => 'delivery_to_all', :disabled => @message.possible_readers.empty?
-              %label.checkbox{:for => 'delivery_to_all', :class => @message.possible_readers.empty? ? 'disabled' : ''} 
+              %label.checkbox{:for => 'delivery_to_all', :class => @message.possible_readers.empty? ? 'disabled' : ''}
                 = t('reader_extension.everyone')
                 = t('reader_extension.count_people', :count => @message.possible_readers.count)
             %p
               = radio_button_tag 'delivery', 'unsent', false, :id => 'delivery_to_unsent', :disabled => @message.undelivered_readers.empty?
-              %label.checkbox{:for => 'delivery_to_unsent', :class => @message.undelivered_readers.empty? ? 'disabled' : ''} 
+              %label.checkbox{:for => 'delivery_to_unsent', :class => @message.undelivered_readers.empty? ? 'disabled' : ''}
                 = t('reader_extension.everyone_unsent')
                 = t('reader_extension.count_people', :count => @message.undelivered_readers.count)
             %p
               = radio_button_tag 'delivery', 'inactive', false, :id => 'delivery_to_inactive', :disabled => @message.inactive_readers.empty?
-              %label.checkbox{:for => 'delivery_to_inactive', :class => @message.inactive_readers.empty? ? 'disabled' : ''} 
+              %label.checkbox{:for => 'delivery_to_inactive', :class => @message.inactive_readers.empty? ? 'disabled' : ''}
                 = t('reader_extension.everyone_inactive')
                 = t('reader_extension.count_people', :count => @message.inactive_readers.count)
             %p
-              = radio_button_tag 'delivery', 'selected', false, :id => 'delivery_to_selected', :disabled => @message.possible_readers.empty?, :rel => 'toggle[select_recipients]'
-              %label.checkbox{:for => 'delivery_to_selected', :class => @message.possible_readers.empty? ? 'disabled' : ''} 
-                = t('reader_extension.selected_people') + "..."
-            %ul#select_recipients
+              = radio_button_tag 'delivery', 'selected_groups', false, :id => 'delivery_to_selected_groups', :disabled => @message.possible_readers.empty?, :rel => 'toggle[select_groups]'
+              %label.checkbox{:for => 'delivery_to_selected', :class => @message.possible_readers.empty? ? 'disabled' : ''}
+                = t('reader_extension.selected_groups') + "..."
+            %ul#select_groups
               %li
                 = check_box_tag 'null', '', false, :class => 'select_all'
                 %label.checkbox.select_all
                   = t('reader_extension.select_all')
-              - @message.possible_readers.each do |reader|
+              - Group.all.each do |group|
                 %li
-                  = check_box_tag "recipients[]", reader.id, false, :id => "recipients_#{reader.id}", :class => 'toggled'
+                  = check_box_tag "group_ids[]", group.id, false, :id => "group_#{group.id}", :class => 'toggled'
                   %label.checkbox
-                    = reader.preferred_name
+                    = group.name
 
           %p.buttons
             = submit_tag t('reader_extension.send_message')
             = t('or')
             = link_to t('reader_extension.cancel'), admin_messages_url
-            
-    
+
+

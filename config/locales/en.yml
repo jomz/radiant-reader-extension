@@ -53,7 +53,7 @@ en:
             name:
               blank: "please enter a name"
               too_long: "this is too long: 100 characters max"
-            nickname: 
+            nickname:
               taken: "this name is already in use here"
             password:
               too_short: "this must have at least six characters"
@@ -122,7 +122,7 @@ en:
     and_try_again: "and try again."
     any_option: "<any>"
     at: "at"
-    belongs_to_groups: 
+    belongs_to_groups:
       one: 'This message is confined to the %{links} group.'
       other: 'This message is confined to the %{links} groups.'
     belongs_to_these_groups: "This message is sent to these groups:"
@@ -144,7 +144,7 @@ en:
     confirmation_code: "Confirmation code"
     confirming_email: "When you press the 'register' button we will send a confirmation email to the address you enter above. Click on a link in that message, and you're in."
     continue: "Continue"
-    count_people: 
+    count_people:
       zero: "(nobody)"
       one: "(one person)"
       other: "(%{count} people)"
@@ -174,7 +174,7 @@ en:
     delete_message: "delete message"
     delete_reader: "delete reader"
     delivery_status: "Delivery"
-    directory: 
+    directory:
       contact: "Contact"
       csv_link: "CSV"
       email: "Email"
@@ -206,7 +206,7 @@ en:
     explain_access_error: "Sorry: you have run into a barrier and are not allowed to do whatever it was you just tried to do. The error message was:"
     for: 'for'
     for_group: "for the %{name} group"
-    for_the_groups: 
+    for_the_groups:
       zero: "without group links"
       one: "for the %{names} group"
       other: "for the %{names} groups"
@@ -388,6 +388,7 @@ en:
     return_to_page: "return to the page you were looking at before you started registering"
     select_all: "Select all"
     selected_people: "Selected people"
+    selected_groups: "Selected groups"
     self_description: "Self-description"
     send_it_again: "send it again"
     send_message: "Send message"

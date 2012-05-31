@@ -8,9 +8,9 @@ class Admin::MessagesController < Admin::ResourceController
   # here :show is the preview/send page
   # continue_url is extended below to redirect to show rather than index after editing.
   def show
-    
+
   end
-  
+
   # mock email view called into an iframe in the :show view
   # the view calls @message.preview, which returns the message body
   def preview
@@ -18,6 +18,7 @@ class Admin::MessagesController < Admin::ResourceController
   end
 
   def deliver
+    @readers = []
     case params['delivery']
     when "all"
       @readers = @message.possible_readers
@@ -25,12 +26,16 @@ class Admin::MessagesController < Admin::ResourceController
       @readers = @message.inactive_readers
     when "unsent"
       @readers = @message.undelivered_readers
-    when "selected"
-      @readers = @message.possible_readers.find(params['recipients'])
+    when "selected_groups"
+      if params[:group_ids] && !params[:group_ids].empty?
+        @groups = Group.find(params['group_ids'])
+        @readers = Reader.in_groups(@groups).all
+      end
     else
       redirect_to admin_message_url(@message)
       return
     end
+
     failures = @message.deliver(@readers) || []
     if failures.any?
       if failures.length == @readers.length
@@ -60,7 +65,7 @@ protected
       model.function_id = params[:function]
     end
   end
-  
+
   def get_group
     @group = Group.find(params[:group_id]) if params[:group_id]
   end

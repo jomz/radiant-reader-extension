@@ -1,6 +1,6 @@
 - page ||= @current_node
 %td.access
-  - if page.visible?
+  - if page.reader_visible?
     =t('reader_extension.access_open')
   - else
     %span.access.draft_status{:title => t('reader_extension.access_restricted_to', :groups => page.groups.map(&:name).to_sentence)}

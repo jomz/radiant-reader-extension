@@ -1,13 +1,13 @@
 class ReaderPage < Page
   include WillPaginate::ViewHelpers
   attr_accessor :reader, :group
-  
+
   description %{ Presents readers and groups with configurable access control. }
-  
+
   def current_reader
     Reader.current
   end
-  
+
   def readers
     if group
       group.readers.visible_to(current_reader)
@@ -15,23 +15,25 @@ class ReaderPage < Page
       Reader.visible_to(current_reader)
     end
   end
-  
+
   def groups
     Group.visible_to(current_reader)
   end
-    
+
   def cache?
     public?
   end
-  
+
   def public?
     Radiant.config['reader.directory_visibility'] == 'public'
   end
-  
-  def visible?
-    public? || current_reader
+
+  def reader_visible?
+    result = public? || current_reader
+    result = false if respond_to(:visible?) && !visible?
+    result
   end
-  
+
   def url_for(thing)
     if thing.is_a?(Reader)
       File.join(self.url, thing.id)
@@ -39,13 +41,13 @@ class ReaderPage < Page
       File.join(self.url, thing.slug)
     end
   end
-  
+
   def find_by_url(url, live = true, clean = false)
     url = clean_url(url) if clean
     my_url = self.url
     return false unless url =~ /^#{Regexp.quote(my_url)}(.*)/
-    raise ReaderError::AccessDenied unless visible?
-    
+    raise ReaderError::AccessDenied unless reader_visible?
+
     params = $1.split('/').compact
     self.group = Group.find_by_slug(params.first) if params.first =~ /\w/
     self.reader = Reader.find_by_id(params.last) if params.last !~ /\D/
@@ -56,5 +58,5 @@ class ReaderPage < Page
 
     self
   end
-  
+
 end

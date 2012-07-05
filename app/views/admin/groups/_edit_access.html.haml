@@ -10,10 +10,11 @@
   %p.access
     %label
       = t('reader_extension.access')
-    - if groupee.visible?
+    - if groupee.reader_visible?
       = link_to t('reader_extension.access_open'), '#groups_popup', :class => 'popup unrestricted', :id => 'group_status_flag'
     - else
       = link_to t('reader_extension.access_restricted'), '#groups_popup', :class => 'popup restricted', :id => 'group_status_flag'
 
   - fields_for groupee do |f|
     = f.hidden_field :group_id_list
+

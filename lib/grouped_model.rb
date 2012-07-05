@@ -1,6 +1,6 @@
 module GroupedModel
-  
-  # Grouped Models are those that can be assigned to one or more groups, and so made invisible to any reader 
+
+  # Grouped Models are those that can be assigned to one or more groups, and so made invisible to any reader
   # who is not a member of one of those groups. As standard this is applied to pages and messages.
   # To group-limit another class:
   #
@@ -28,30 +28,30 @@ module GroupedModel
       false
     end
     alias :has_group? :has_groups?
-    
+
     # Sets up group relations and scopes in this model. No extra columns are required in the model table.
     #
     def has_groups(options={})
       return if has_groups?
-      
+
       class_eval {
         include GroupedModel::GroupedInstanceMethods
 
         def self.has_groups?
           true
         end
-        
+
         def self.visible
           ungrouped
         end
       }
-      
+
       has_many :permissions, :as => :permitted
       accepts_nested_attributes_for :permissions
       has_many :groups, :through => :permissions
       Group.define_retrieval_methods(self.to_s)
 
-      named_scope :visible_to, lambda { |reader| 
+      named_scope :visible_to, lambda { |reader|
         conditions = "pp.group_id IS NULL"
         if reader && reader.is_grouped?
           ids = reader.group_ids
@@ -62,13 +62,13 @@ module GroupedModel
           :group => column_names.map { |n| self.table_name + '.' + n }.join(','),
           :conditions => conditions,
           :readonly => false
-        } 
+        }
       }
 
       named_scope :ungrouped, lambda {
         {
           :select => "#{self.table_name}.*, count(pp.id) as group_count",
-          :joins => "LEFT OUTER JOIN permissions as pp on pp.permitted_id = #{self.table_name}.id AND pp.permitted_type = '#{self.to_s}'", 
+          :joins => "LEFT OUTER JOIN permissions as pp on pp.permitted_id = #{self.table_name}.id AND pp.permitted_type = '#{self.to_s}'",
           :having => "group_count = 0",
           :group => column_names.map { |n| self.table_name + '.' + n }.join(','),    # postgres requires that we group by all selected (but not aggregated) columns
           :readonly => false
@@ -82,7 +82,7 @@ module GroupedModel
       named_scope :grouped, lambda {
           {
           :select => "#{self.table_name}.*, count(pp.id) as group_count",
-          :joins => "LEFT OUTER JOIN permissions as pp on pp.permitted_id = #{self.table_name}.id AND pp.permitted_type = '#{self.to_s}'", 
+          :joins => "LEFT OUTER JOIN permissions as pp on pp.permitted_id = #{self.table_name}.id AND pp.permitted_type = '#{self.to_s}'",
           :having => "group_count > 0",
           :group => column_names.map { |n| self.table_name + '.' + n }.join(','),
           :readonly => false
@@ -92,21 +92,21 @@ module GroupedModel
           length
         end
       end
-      
+
       named_scope :belonging_to, lambda { |group|
         {
-          :joins => "INNER JOIN permissions as pp on pp.permitted_id = #{self.table_name}.id AND pp.permitted_type = '#{self.to_s}'", 
+          :joins => "INNER JOIN permissions as pp on pp.permitted_id = #{self.table_name}.id AND pp.permitted_type = '#{self.to_s}'",
           :group => column_names.map { |n| self.table_name + '.' + n }.join(','),
           :conditions => ["pp.group_id = ?", group.id],
           :readonly => false
         }
       }
-      
+
       named_scope :find_these, lambda { |ids|
         ids = ['NULL'] unless ids && ids.any?
         { :conditions => ["#{self.table_name}.id IN (#{ids.map{"?"}.join(',')})", *ids] }
       }
-            
+
     end
     alias :has_group :has_groups
   end
@@ -127,19 +127,19 @@ module GroupedModel
         nil
       end
     end
-    
-    def visible?
+
+    def reader_visible?
       groups.empty?
     end
 
     def permitted_readers
       groups.any? ? readers_permitted_by_groups : Reader.scoped({})
     end
-    
+
     def has_group?(group)
       return self.groups.include?(group)
     end
-    
+
     def permit(group)
       self.groups << group unless self.has_group?(group)
     end

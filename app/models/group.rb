@@ -16,6 +16,8 @@ class Group < ActiveRecord::Base
   validates_presence_of :name, :slug, :allow_blank => false
   validates_uniqueness_of :name, :slug
   
+  default_scope :order => 'name'
+  
   named_scope :any
   named_scope :none, { :conditions => "1 = 0" }   # nasty! but doesn't break chains
   named_scope :with_home_page, { :conditions => "homepage_id IS NOT NULL", :include => :homepage }

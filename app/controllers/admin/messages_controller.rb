@@ -29,7 +29,7 @@ class Admin::MessagesController < Admin::ResourceController
     when "selected_groups"
       if params[:group_ids] && !params[:group_ids].empty?
         @groups = Group.find(params['group_ids'])
-        @readers = Reader.in_groups(@groups).all
+        @readers = Reader.in_groups(@groups)
       end
     else
       redirect_to admin_message_url(@message)

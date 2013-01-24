@@ -93,7 +93,8 @@ class Message < ActiveRecord::Base
 
   def deliver(readers)
     failures = []
-    readers.find_each do |reader|
+    method_name = readers.respond_to?(:find_each) ? :find_each : :each
+    readers.send(method_name) do |reader|
       failures.push(reader) unless deliver_to(reader)
     end
     self.published!

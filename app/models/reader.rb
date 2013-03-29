@@ -58,12 +58,23 @@ class Reader < ActiveRecord::Base
     end
   }
 
-  named_scope :in_groups, lambda { |groups| 
+  named_scope :in_groups, lambda { |groups|
+    group_ids = groups.map { |group| group.is_a?(Group) ? group.id : group }
     {
-      :select => "readers.*",
-      :joins => "INNER JOIN memberships as mm on mm.reader_id = readers.id", 
-      :conditions => ["mm.group_id IN (#{groups.map{'?'}.join(',')})", *groups.map{|g| g.is_a?(Group) ? g.id : g}],
-      :group => "mm.reader_id"
+        :select => "readers.*",
+        :joins => "INNER JOIN memberships as mm on mm.reader_id = readers.id",
+        :conditions => ["mm.group_id IN (#{groups.map{'?'}.join(',')})", *group_ids],
+        :group => "mm.reader_id"
+    }
+  }
+
+  named_scope :in_all_groups, lambda { |groups|
+    group_ids = groups.map { |group| group.is_a?(Group) ? group.id : group }
+    condition_parts = group_ids.map do |group_id|
+      "readers.id IN (SELECT reader_id FROM memberships WHERE group_id = #{group_id})"
+    end
+    {
+      :conditions => condition_parts.join(' AND ')
     }
   }
 

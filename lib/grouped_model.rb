@@ -133,7 +133,7 @@ module GroupedModel
     end
 
     def permitted_readers
-      groups.any? ? Reader.in_groups(groups) : Reader.scoped({})
+      groups.any? ? readers_permitted_by_groups : Reader.scoped({})
     end
     
     def has_group?(group)
@@ -151,5 +151,15 @@ module GroupedModel
     def group_id_list=(ids)
       self.groups = Group.find_these(ids.split(/,\s*/))
     end
+
+    private
+
+      def readers_permitted_by_groups
+        if group_access_type == 'and'
+          Reader.in_all_groups(groups)
+        else
+          Reader.in_groups(groups)
+        end
+      end
   end
 end

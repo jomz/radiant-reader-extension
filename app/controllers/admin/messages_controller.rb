@@ -32,10 +32,11 @@ class Admin::MessagesController < Admin::ResourceController
     when "unsent"
       @readers = @message.undelivered_readers
     when "selected_groups"
-      if params[:group_ids] && !params[:group_ids].empty?
-        @groups = Group.find(params['group_ids'])
-        @readers = Reader.in_groups(@groups)
-      end
+      load_selected_groups
+      load_readers_for_groups
+    when "newsletter_and_selected_groups"
+      load_selected_groups
+      load_readers_for_groups_and_newsletter
     else
       redirect_to admin_message_url(@message)
       return
@@ -56,6 +57,24 @@ class Admin::MessagesController < Admin::ResourceController
   end
 
 protected
+
+  def load_selected_groups
+    if params[:group_ids] && !params[:group_ids].empty?
+      @groups = Group.find(params[:group_ids])
+    else
+      @groups = []
+    end
+  end
+
+  def load_readers_for_groups
+    @readers = @groups.empty? ? [] : Reader.in_groups(@groups)
+  end
+
+  def load_readers_for_groups_and_newsletter
+    newsletter_group = Group.find(211)
+    raise ArgumentError.new("This feature needs a newsletter group") unless newsletter_group
+    @readers = @groups.empty? ? [] : Reader.in_groups(@groups).also_in_group(newsletter_group)
+  end
 
   def continue_url(options)
     if action_name == "destroy"

@@ -155,11 +155,7 @@ module GroupedModel
     private
 
       def readers_permitted_by_groups
-        if group_access_type == 'and'
-          Reader.in_all_groups(groups)
-        else
-          Reader.in_groups(groups)
-        end
+        Reader.in_groups(groups)
       end
   end
 end

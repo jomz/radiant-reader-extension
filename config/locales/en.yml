@@ -389,6 +389,7 @@ en:
     select_all: "Select all"
     selected_people: "Selected people"
     selected_groups: "Selected groups"
+    newsletter_and_selected_groups: "Selected groups who are subscribed to newsletter"
     self_description: "Self-description"
     send_it_again: "send it again"
     send_message: "Send message"

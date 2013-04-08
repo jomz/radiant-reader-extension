@@ -17,8 +17,3 @@
 
   - fields_for groupee do |f|
     = f.hidden_field :group_id_list
-
-    %p.access_type
-      %label
-        Group access type
-      = f.select :group_access_type, {"users in any of these groups" => 'or', "only users in all of these groups" => 'and'}, :include_blank => false

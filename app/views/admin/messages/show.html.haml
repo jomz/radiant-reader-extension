@@ -67,6 +67,12 @@
               %label.checkbox{:for => 'delivery_to_inactive', :class => @message.inactive_readers.empty? ? 'disabled' : ''}
                 = t('reader_extension.everyone_inactive')
                 = t('reader_extension.count_people', :count => @message.inactive_readers.count)
+
+            %p
+              = radio_button_tag 'delivery', 'newsletter_and_selected_groups', false, :id => 'delivery_to_newsletter_and_selected_groups', :disabled => @message.possible_readers.empty?, :rel => 'toggle[select_groups]'
+              %label.checkbox{:for => 'delivery_to_newsletter_and_selected', :class => @message.possible_readers.empty? ? 'disabled' : ''}
+                = t('reader_extension.newsletter_and_selected_groups') + "..."
+
             %p
               = radio_button_tag 'delivery', 'selected_groups', false, :id => 'delivery_to_selected_groups', :disabled => @message.possible_readers.empty?, :rel => 'toggle[select_groups]'
               %label.checkbox{:for => 'delivery_to_selected', :class => @message.possible_readers.empty? ? 'disabled' : ''}

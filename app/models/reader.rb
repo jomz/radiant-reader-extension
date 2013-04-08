@@ -68,6 +68,10 @@ class Reader < ActiveRecord::Base
     }
   }
 
+  named_scope :also_in_group, lambda {|group|
+    {:conditions => ["readers.id IN (SELECT reader_id FROM memberships WHERE group_id = ?)", group.id]}
+  }
+
   named_scope :in_all_groups, lambda { |groups|
     group_ids = groups.map { |group| group.is_a?(Group) ? group.id : group }
     condition_parts = group_ids.map do |group_id|

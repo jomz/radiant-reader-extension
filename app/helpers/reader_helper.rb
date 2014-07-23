@@ -199,5 +199,26 @@ EOM
     }.join("\n")
   end
 
+  def error_messages_except(record, excluded_fields)
+    errors = errors_except(record, excluded_fields)
+    unless errors.empty?
+      error_nodes = errors.map do |key, value|
+        content_tag(:li, content_tag(:strong, key.humanize.titleize) + ": #{value}")
+      end
+      content_tag(:ul, error_nodes.join("\n"), :class => 'error_list')
+    end
+  end
+
+  private
+
+  def errors_except(record, excluded_fields)
+    results = {}
+    record.errors.each do |key, value|
+      unless excluded_fields.include?(key.to_sym)
+        results[key] = value
+      end
+    end
+    results
+  end
 end
 

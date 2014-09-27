@@ -164,7 +164,7 @@ EOM
     tree.each_pair do |key, values|
       unless key == exception
         option_list << [". " * depth + key.name, key.id]
-        option_list << options_from_tree(values, :depth => depth + 1, :except => exception) if values.any?
+        option_list.concat options_from_tree(values, :depth => depth + 1, :except => exception) if values.any?
       end
     end
     option_list.compact

@@ -38,7 +38,7 @@
           - render_region :tbody do |tbody|
             - tbody.title_cell do
               %td{:class => reader.activated? ? 'name activated' : 'name inactive'}
-               = link_to((reader.name || '(unnamed)'), edit_admin_reader_url(reader), :class => (reader.trusted? ? '' : 'untrusted'))
+                = link_to((reader.name || '(unnamed)'), edit_admin_reader_url(reader), :class => (reader.trusted? ? '' : 'untrusted'))
                 / %span.info
                 /   = "#{reader.nickname}"
                 - unless reader.notes.blank?

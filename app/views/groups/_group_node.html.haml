@@ -1,6 +1,6 @@
 %li{:style => "padding-left: #{level*15}px", :id => "group_#{group.id}"}
   = link_to group.name, group.homepage.nil? ? group_url(group) : group.homepage.path
-  - if group.children.any?
+  - if children.any?
     %ul
-      - group.children.each do |child|
-        = render_group_node child, :level => level + 1, :simple => simple
+      - children.each do |child, grandchildren|
+        = render_group_node child, :level => level + 1, :simple => simple, :children => grandchildren

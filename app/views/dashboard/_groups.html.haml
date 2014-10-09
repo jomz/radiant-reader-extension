@@ -3,5 +3,5 @@
     %h3
       = t('reader_extension.dashboard.groups')
     %ul.groups
-      - current_reader.groups.select{|g| g.ancestry.nil?}.each do |group|
-        = render_group_node(group, :simple => true)
+      - current_reader.groups.arrange.each do |group, children|
+        = render_group_node(group, :simple => true, :children => children)

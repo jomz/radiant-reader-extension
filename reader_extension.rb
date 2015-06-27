@@ -1,5 +1,12 @@
 require_dependency 'application_controller'
 require 'radiant-reader-extension'
+if RUBY_VERSION =~ /1.9/
+  require 'csv'
+  READER_CSV_LIB = CSV
+else
+  require "fastercsv"
+  READER_CSV_LIB = FasterCSV
+end
 
 class ReaderExtension < Radiant::Extension
   version RadiantReaderExtension::VERSION

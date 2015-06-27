@@ -1,6 +1,4 @@
 class Admin::GroupInvitationsController < ApplicationController
-  require 'csv'
-  
   before_filter :find_group, :only => [:new, :create]
 
   def new
@@ -54,7 +52,7 @@ private
 
   def readers_from_csv(readerdata)
     readers = []
-    CSV::StringReader.parse(readerdata).each do |line|
+    READER_CSV_LIB.parse(readerdata).each do |line|
       csv = line.collect {|value| value ? value.gsub(/^ */, '').chomp : ''}
       input = {}
       input[:honorific] = csv.shift if Radiant::Config['reader.show_honorifics?']

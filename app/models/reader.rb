@@ -2,7 +2,6 @@ require 'authlogic'
 require 'digest/sha1'
 require 'snail'
 require 'vcard'
-require "fastercsv"
 
 class Reader < ActiveRecord::Base
   @@user_columns = %w{name email created_at password password_confirmation notes}

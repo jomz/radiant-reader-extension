@@ -264,18 +264,23 @@ class Reader < ActiveRecord::Base
     send_functional_message('group_invitation', group)
   end
   
+  def join_name_parts
+    [forename, surname].reject(&:blank?).join(' ')
+  end
 private
 
   def combine_names
-    if self.forename_changed? || self.surname_changed?
-      self.name = "#{self.forename} #{self.surname}"
-    elsif self.name_changed?
+    if forename_changed? || surname_changed?
+      self.name = join_name_parts
+    elsif name_changed? && name.present?
       self.forename = self.name.split(/\s+/).first
       self.surname = self.name.split(/\s+/).last
     end
-    self.forename = self.name.split(/\s+/).first unless self.forename?
-    self.surname = self.name.split(/\s+/).last unless self.surname?
-    self.name = "#{self.forename} #{self.surname}" unless self.name?
+    if name.present?
+      self.forename ||= self.name.split(/\s+/).first
+      self.surname ||= self.name.split(/\s+/).last
+    end
+    self.name ||= join_name_parts
   end
 
   def email_must_not_be_in_use

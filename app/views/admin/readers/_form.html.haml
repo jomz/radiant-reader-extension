@@ -30,7 +30,7 @@
       %p
         = f.label :dob
         %br
-        = f.date_select :dob
+        = f.date_select(:dob, :start_year => 100.years.ago.year, :end_year => 1.year.ago.year)
         %br
         = f.check_box :dob_secret
         = f.label :dob_secret, nil, :class => 'checkbox'

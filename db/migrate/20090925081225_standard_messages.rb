@@ -17,7 +17,7 @@ class StandardMessages < ActiveRecord::Migration
 <p>Next time you visit, you will need to log in. Here's another reminder before we discard the plain text version of your password:</p>
 
 <ul>
-  <li>username: <strong><r:recipient:login /></strong></li>
+  <li>username: <strong><r:recipient:email /></strong></li>
   <li>password: <strong><r:recipient:password /></strong></li>
 </ul>
 
@@ -39,7 +39,7 @@ class StandardMessages < ActiveRecord::Migration
 <p>On this first visit you'll be logged in automatically, but next time you'll need to know your username and password:</p>
 
 <ul>
-<li>username: <strong><r:recipient:login /></strong></li>
+<li>username: <strong><r:recipient:email /></strong></li>
 <li>password: <strong><r:recipient:password /></strong></li>
 </ul>
 
@@ -65,7 +65,7 @@ class StandardMessages < ActiveRecord::Migration
 <p>On this first visit you'll be logged in automatically, but next time you'll need to know your username and password. Most of this has been generated automatically:</p>
 
 <ul>
-  <li>username: <strong><r:recipient:login /></strong></li>
+  <li>username: <strong><r:recipient:email /></strong></li>
   <li>password: <strong><r:recipient:password /></strong></li>
 </ul>
 

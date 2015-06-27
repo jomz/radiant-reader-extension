@@ -1,6 +1,10 @@
 class ReaderNotifier < ActionMailer::Base
 
-  radiant_layout lambda { Radiant::Config['email.layout'] || 'email'}
+  radiant_layout {|n| n.choose_layout }
+  
+  def choose_layout
+    Radiant::Config['email.layout'] || 'email'
+  end
   
   def message(reader, message, sender=nil)
     site = reader.site if reader.respond_to?(:site)

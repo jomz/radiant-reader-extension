@@ -56,7 +56,7 @@ class Message < ActiveRecord::Base
   end
 
   def preview(reader=nil)
-    reader ||= possible_readers.first || Reader.for_user(Reader.current)
+    reader ||= possible_readers.first || Reader.for_user(UserActionObserver.instance.current_user)
     ReaderNotifier.create_message(reader, self)
   end
   

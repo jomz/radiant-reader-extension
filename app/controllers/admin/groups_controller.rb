@@ -14,7 +14,7 @@ class Admin::GroupsController < Admin::ResourceController
   end
   
   def load_models
-    self.models = paginated? ? model_class.paginate(pagination_parameters) : model_class.all
+    # Group.arrange is used on admin/groups/index
   end
   
   def load_model

@@ -43,15 +43,16 @@ class Admin::MessagesController < Admin::ResourceController
     end
 
     failures = @message.deliver(@readers) || []
-    if failures.any?
-      if failures.length == @readers.length
-        flash[:error] = t("reader_extension.all_deliveries_failed")
-      else
+    if failures.length == @readers.length
+      flash[:error] = t("reader_extension.all_deliveries_failed")
+    else
+      if failures.any?
         addresses = failures.map(&:email).to_sentence
         flash[:notice] = t("reader_extension.some_deliveries_failed")
+      else
+        flash[:notice] = t("reader_extension.message_delivered")
       end
-    else
-      flash[:notice] = t("reader_extension.message_delivered")
+      @message.update_attribute :sent_at, Time.now
     end
     redirect_to admin_message_url(@message)
   end

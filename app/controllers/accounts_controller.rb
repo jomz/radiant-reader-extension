@@ -80,7 +80,11 @@ class AccountsController < ReaderActionController
     @reader.email = params[@email_field.intern]
     if (@reader.valid?)
       @reader.save!
-      @reader.send_activation_message
+      if Radiant::Config["reader.require_confirmation?"]
+        @reader.send_activation_message
+      else
+        @reader.activate!
+      end
       self.current_reader = @reader
       redirect_to reader_activation_url
     else

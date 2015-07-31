@@ -81,7 +81,7 @@
       %p.buttons
         = save_model_button(@reader)
         = save_model_and_continue_editing_button(@reader)
-        = t('reader_extension.or')   
+        = t('or')   
         = link_to t('reader_extension.cancel'), admin_readers_path
     - form_bottom.edit_timestamp do
       = updated_stamp @reader

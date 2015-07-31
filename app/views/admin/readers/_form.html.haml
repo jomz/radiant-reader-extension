@@ -3,78 +3,79 @@
   = render :partial => 'avatar' unless @reader.new_record?
   
   = render_region :form_top, :locals => {:f => f}
-  
-  - render_region :form, :locals => {:f => f} do |form|
-    - form.edit_name do
-      %p
-        = f.label :forename
-        = f.text_field :forename, :class => "textbox activate", :size => 32, :maxlength => 100 
-      %p
-        = f.label :surname
-        = f.text_field :surname, :class => "textbox activate", :size => 32, :maxlength => 100 
-    
-    - form.edit_email do
-      %p
-        = f.label :email
-        = f.text_field :email, :class => 'textbox', :size => 32, :maxlength => 255
-
-    - form.edit_nickname do
-      %p
-        = f.label :nickname
-        = f.text_field :nickname, :class => 'textbox', :size => 32, :maxlength => 255
-        
-    - form.edit_password do
-      = render "password_fields", :f => f
-    
-    - form.edit_dob do
-      %p
-        = f.label :dob
-        %br
-        = f.date_select(:dob, :start_year => 100.years.ago.year, :end_year => 1.year.ago.year)
-        %br
-        = f.check_box :dob_secret
-        = f.label :dob_secret, nil, :class => 'checkbox'
-
-    - form.edit_phone do
-      %p
-        = f.label :phone
-        = f.text_field :phone, :class => 'textbox'
-      %p
-        = f.label :mobile
-        = f.text_field :mobile, :class => 'textbox'
-
-    - form.edit_address do
-      %p
-        = f.label :post_line1, t('activerecord.attributes.reader.postal_address')
-        = f.text_field :post_line1, :class => 'textbox'
-        %br
-        = f.text_field :post_line2, :class => 'textbox'
-      %p
-        = f.label :post_city
-        = f.text_field :post_city, :class => 'textbox'
-      %p
-        = f.label :post_province
-        = f.text_field :post_province, :class => 'textbox'
-      %p
-        = f.label :postcode
-        = f.text_field :postcode, :class => 'textbox'
-
-    - form.edit_description do
-      - if Radiant.config['reader.show_descriptions?']
+  .left{:style => "width: 50%; float: left"}
+    - render_region :form, :locals => {:f => f} do |form|
+      - form.edit_name do
         %p
-          = f.label :description, "Self-description", :class => "optional"
-          ~ f.text_area "description", :size => "53x8", :class => "textarea"
+          = f.label :forename
+          = f.text_field :forename, :class => "textbox activate", :size => 32, :maxlength => 100 
+        %p
+          = f.label :surname
+          = f.text_field :surname, :class => "textbox activate", :size => 32, :maxlength => 100 
+    
+      - form.edit_email do
+        %p
+          = f.label :email
+          = f.text_field :email, :class => 'textbox', :size => 32, :maxlength => 255
 
-    - form.edit_notes do
-      %p
-        = f.check_box :disabled
-        = f.label :disabled, nil, :class => 'checkbox'
-      %p
-        = f.label :notes, t('reader_extension.notes'), :class => "optional"
-        ~ f.text_area "notes", :size => "53x4", :class => "textarea"
+      - form.edit_nickname do
+        %p
+          = f.label :nickname
+          = f.text_field :nickname, :class => 'textbox', :size => 32, :maxlength => 255
+        
+      - form.edit_password do
+        = render "password_fields", :f => f
+    
+      - form.edit_dob do
+        %p
+          = f.label :dob
+          %br
+          = f.date_select(:dob, :start_year => 100.years.ago.year, :end_year => 1.year.ago.year)
+          %br
+          = f.check_box :dob_secret
+          = f.label :dob_secret, nil, :class => 'checkbox'
+
+      - form.edit_phone do
+        %p
+          = f.label :phone
+          = f.text_field :phone, :class => 'textbox'
+        %p
+          = f.label :mobile
+          = f.text_field :mobile, :class => 'textbox'
+
+      - form.edit_address do
+        %p
+          = f.label :post_line1, t('activerecord.attributes.reader.postal_address')
+          = f.text_field :post_line1, :class => 'textbox'
+          %br
+          = f.text_field :post_line2, :class => 'textbox'
+        %p
+          = f.label :post_city
+          = f.text_field :post_city, :class => 'textbox'
+        %p
+          = f.label :post_province
+          = f.text_field :post_province, :class => 'textbox'
+        %p
+          = f.label :postcode
+          = f.text_field :postcode, :class => 'textbox'
+
+      - form.edit_description do
+        - if Radiant.config['reader.show_descriptions?']
+          %p
+            = f.label :description, "Self-description", :class => "optional"
+            ~ f.text_area "description", :size => "53x8", :class => "textarea"
+
+      - form.edit_notes do
+        %p
+          = f.check_box :disabled
+          = f.label :disabled, nil, :class => 'checkbox'
+        %p
+          = f.label :notes, t('reader_extension.notes'), :class => "optional"
+          ~ f.text_area "notes", :size => "53x4", :class => "textarea"
   
-  = render_region :form_additions, :locals => {:f => f}
-
+  .right{:style => "width: 50%; float: right"}
+    = render_region :form_additions, :locals => {:f => f}
+  .clear{:style => "clear: both"}
   - render_region :form_bottom, :locals => {:f => f} do |form_bottom|
     - form_bottom.edit_buttons do
       %p.buttons

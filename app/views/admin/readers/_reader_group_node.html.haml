@@ -1,0 +1,10 @@
+%li{:style => "padding-left: #{level*15}px", :id => "group_#{group.id}"}
+  %span.checkbox
+  = check_box_tag "reader[group_ids][]", group.id, @reader.is_in?(group), :id => "reader_group_#{group.id}"
+  %label.checkbox{:for => "reader_group_#{group.id}"}
+    = group.name
+  
+  - if children.any?
+    %ul
+      - children.each do |child, grandchildren|
+        = render_reader_group_node child, :level => level + 1, :children => grandchildren

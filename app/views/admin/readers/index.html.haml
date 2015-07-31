@@ -35,7 +35,7 @@
     %tbody
       - @readers.each do |reader|
         %tr{:class => reader.disabled? ? 'disabled' : 'active'}
-          - render_region :tbody do |tbody|
+          - render_region :tbody, :locals => {:reader => reader} do |tbody|
             - tbody.title_cell do
               %td{:class => reader.activated? ? 'name activated' : 'name inactive'}
                 = link_to((reader.name || '(unnamed)'), edit_admin_reader_url(reader), :class => (reader.trusted? ? '' : 'untrusted'))

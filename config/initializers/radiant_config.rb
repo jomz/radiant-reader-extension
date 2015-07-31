@@ -13,6 +13,7 @@ Radiant.config do |config|
     reader.define 'show_honorifics?', :default => false
     reader.define 'show_descriptions?', :default => false
     reader.define 'show_dobs?', :default => false
+    reader.define 'searchable_columns', :default => "forename surname email"
   end
   config.namespace('email') do |email|
     email.define 'layout', :select_from => lambda { Layout.all.map(&:name) }, :allow_blank => true

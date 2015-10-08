@@ -191,7 +191,7 @@ module ReaderTags
     content = tag.expand
     tag.attr['words'] ||= tag.attr['length']
     omission = tag.attr['omission'] || '&hellip;'
-    content = scrub_html(content) unless tag.attr['allow_html'] == 'true'
+    content = ActionView::Base.new.strip_tags(content) unless tag.attr['allow_html'] == 'true'
     if tag.attr['chars']
       truncate(content, :length => tag.attr['chars'].to_i, :omission => omission)
     else

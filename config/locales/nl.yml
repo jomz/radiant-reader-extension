@@ -306,6 +306,7 @@ nl:
     never_sent: 'nooit verstuurd'
     new_account: "Hier registreren"
     new_group: "Nieuwe Groep"
+    new_message: "Nieuw bericht"
     new_password: "Nieuw paswoord"
     new_password_instructions: "Gelieve je wachtwoord op te geven en te verifieren. Het moet minstens 4 karakters zijn en bij voorkeur een combinatie van letters en cijfers."
     new_reader: "Nieuwe Reader"

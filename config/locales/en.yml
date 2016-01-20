@@ -307,6 +307,7 @@ en:
     never_sent: 'never sent'
     new_account: "Register here"
     new_group: "New Group"
+    new_message: "New message"
     new_password: "New password"
     new_password_instructions: "Please enter and confirm the new password you would like to use. It should be at least six characters long, nothing obvious or typical and with at least one non-letter character."
     new_reader: "New Reader"

@@ -186,7 +186,7 @@ EOM
 
   def css_for_readers_groups readers
     # this should handle either a single reader, or an array being passed in:
-    groups = readers.map(&:groups).uniq.flatten
+    groups = readers.map(&:groups).flatten.uniq
     # remove any nils!:
     groups = groups.compact
 

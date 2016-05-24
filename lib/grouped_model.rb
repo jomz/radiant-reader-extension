@@ -46,7 +46,7 @@ module GroupedModel
         end
       }
 
-      has_many :permissions, :as => :permitted
+      has_many :permissions, :as => :permitted, :dependent => :destroy
       accepts_nested_attributes_for :permissions
       has_many :groups, :through => :permissions
       Group.define_retrieval_methods(self.to_s)

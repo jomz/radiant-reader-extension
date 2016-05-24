@@ -8,7 +8,7 @@ class Group < ActiveRecord::Base
   belongs_to :homepage, :class_name => 'Page'
 
   has_many :messages
-  has_many :permissions
+  has_many :permissions, :dependent => :destroy
   has_many :memberships
   has_many :readers, :through => :memberships, :uniq => true
   

@@ -15,6 +15,16 @@ class Admin::MessagesController < Admin::ResourceController
   def show
 
   end
+  
+  def destroy
+    if @message
+      @message.destroy
+      flash[:notice] = 'The message has been succesfully deleted.'
+    else
+      flash[:error] = 'Could not find that message. It must have been already deleted.'
+    end
+    redirect_to admin_messages_url
+  end
 
   # mock email view called into an iframe in the :show view
   # the view calls @message.preview, which returns the message body

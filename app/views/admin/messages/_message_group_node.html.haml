@@ -1,0 +1,10 @@
+%li{:style => "padding-left: #{level*15}px", :id => "group_#{group.id}"}
+  %span.checkbox
+  = check_box_tag "group_ids[]", group.id, false, :id => "group_#{group.id}"
+  %label.checkbox{:for => "group_#{group.id}"}
+    = group.name
+  
+  - if children.any?
+    %ul
+      - children.each do |child, grandchildren|
+        = render_message_group_node child, :level => level + 1, :children => grandchildren

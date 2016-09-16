@@ -107,7 +107,7 @@ class Message < ActiveRecord::Base
     true
   rescue => e
     Rails.logger.warn "@@  delivery failed: #{e.inspect}"
-    raise
+    false
   end
 
   def record_delivery(reader)

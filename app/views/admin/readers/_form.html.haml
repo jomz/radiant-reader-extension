@@ -58,6 +58,10 @@
         %p
           = f.label :postcode
           = f.text_field :postcode, :class => 'textbox'
+        %p
+          = f.label :post_country
+          = f.text_field :post_country, :class => 'textbox'
+          = # f.select :post_country, options_for_select(Snail::USPS_COUNTRIES, (model.post_country.blank? ? 'New Zealand' : model.post_country))
 
       - form.edit_description do
         - if Radiant.config['reader.show_descriptions?']

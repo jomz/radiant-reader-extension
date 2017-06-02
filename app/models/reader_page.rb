@@ -30,7 +30,7 @@ class ReaderPage < Page
 
   def reader_visible?
     result = public? || current_reader
-    result = false if respond_to(:visible?) && !visible?
+    result = false if respond_to?(:visible?) && !visible?
     result
   end
 

@@ -1,0 +1,39 @@
+:css
+  .group {
+    font-size: 120%;
+    font-weight: bold;
+    position: relative;
+    padding: 10px;
+    padding-left: 30px;
+    border-top: 1px solid #eaeaea;
+  }
+  ul.groups {
+    border-bottom: 1px solid #eaeaea;
+  }
+  ul.groups li {
+    font-size: 105%;
+    font-weight: normal;
+    padding: 10px;
+    padding-left: 52px;
+  }
+
+%h1#reorder_pages
+  Reorder child groups of
+  = "&lsquo;#{@group.name}&rsquo;"
+  group
+%p Drag and drop child groups to reorder. Click <strong>Finished</strong> when you are done.
+
+%ul#children.groups
+  - @children.each do |child|
+    %li.group{:id => "item_#{child.id}"}= child.name
+
+%script
+  Sortable.create("children", { onUpdate:function(){ $('sort_order').value = Sortable.sequence('children').join(',') } });
+
+- @javascripts << 'admin/dragdrop'
+- form_tag do
+  %p.buttons
+    = submit_tag "Finished", :class => 'button'
+    or
+    = link_to 'Cancel', admin_groups_url
+  = hidden_field_tag "sort_order"

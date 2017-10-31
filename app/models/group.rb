@@ -16,7 +16,7 @@ class Group < ActiveRecord::Base
   validates_presence_of :name, :slug, :allow_blank => false
   validates_uniqueness_of :name, :slug
   
-  default_scope :order => 'name'
+  default_scope :order => 'position ASC'
   
   named_scope :any
   named_scope :none, { :conditions => "1 = 0" }   # nasty! but doesn't break chains

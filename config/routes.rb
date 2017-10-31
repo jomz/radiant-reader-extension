@@ -6,7 +6,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.namespace :admin, :path_prefix => 'admin/readers' do |admin|
     admin.resources :messages, :member => [:preview, :deliver]
-    admin.resources :groups, :has_many => [:memberships, :permissions, :group_invitations, :messages]
+    admin.resources :groups, :has_many => [:memberships, :permissions, :group_invitations, :messages], :member => [:reorder]
     admin.resources :memberships, :only => [:edit, :update], :member => [:toggle]
     admin.resources :permissions, :only => [], :member => [:toggle]
   end

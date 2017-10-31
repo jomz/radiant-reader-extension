@@ -13,6 +13,20 @@ class Admin::GroupsController < Admin::ResourceController
     
   end
   
+  def reorder
+    if request.post?
+      sort_order = params[:sort_order].to_s.split(',').map { |i| Integer(i) rescue nil }.compact
+      sort_order.each_with_index do |id, index|
+        Group.update(id, :position => index)
+      end
+      Radiant::Cache.clear    
+      redirect_to admin_groups_url
+    else
+      @group = Group.find(params[:id])
+      @children = @group.children
+    end
+  end
+  
   def load_models
     # Group.arrange is used on admin/groups/index
   end

@@ -119,10 +119,3 @@ module ControllerExtensions    # for inclusion into ApplicationController
 
   end
 end
-
-
-
-
-
-
-

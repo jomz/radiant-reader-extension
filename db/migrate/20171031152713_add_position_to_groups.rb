@@ -1,6 +1,6 @@
 class AddPositionToGroups < ActiveRecord::Migration
   def self.up
-    # add_column :groups, :position, :integer
+    add_column :groups, :position, :integer
     Group.reset_column_information
     Group.find(:all).reject { |g| g.children.empty? }.each do |g|
       g.children.each_with_index do |child, index|

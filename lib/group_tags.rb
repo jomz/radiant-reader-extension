@@ -41,6 +41,15 @@ module GroupTags
   end
 
   desc %{
+    Sets the page scope to this group's home page
+  
+    <pre><code><r:group:homepage>...</r:group:homepage /></code></pre>
+  }
+  tag "group:homepage" do |tag|
+    tag.expand if tag.locals.page = tag.locals.group.homepage
+  end
+
+  desc %{
     Expands if this group has messages.
   
     <pre><code><r:group:if_messages>...</r:group:if_messages /></code></pre>
@@ -75,5 +84,45 @@ module GroupTags
       result << tag.expand
     end
     result
+  end
+  
+  desc %{
+    Loops through the subgroups of the current group
+  
+    <pre><code><r:group:subgroups:each>...</r:group:subgroups:each /></code></pre>
+  }
+  tag "group:subgroups" do |tag|
+    tag.expand
+  end
+  tag "group:subgroups:each" do |tag|
+    result = []
+    options = group_find_options(tag)
+    groups = tag.locals.group.children.all(options)
+    groups.each do |group|
+      tag.locals.group = group
+      result << tag.expand
+    end
+    result.join('')
+  end
+  
+  def group_find_options tag
+    attr = tag.attr.symbolize_keys
+    options = {}
+    
+    by = (attr[:by] || 'position').strip
+    order = (attr[:order] || 'asc').strip
+    order_string = ''
+    if Group.columns.map(&:name).include?(by)
+      order_string << by
+    else
+      raise TagError.new("`by' attribute of `each' tag must be set to a valid field name")
+    end
+    if order =~ /^(asc|desc)$/i
+      order_string << " #{$1.upcase}"
+    else
+      raise TagError.new(%{`order' attribute of `each' tag must be set to either "asc" or "desc"})
+    end
+    options[:order] = order_string
+    options
   end
 end

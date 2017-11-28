@@ -27,5 +27,5 @@
         - if children.any?
           = link_to image('reorder') + " Reorder", reorder_admin_group_url(group), {:class => 'action'}
 - if children.any?
-  - children.sort_by{|child, grandchildren| child.position }.each do |child, grandchildren|
+  - children.sort_by{|child, grandchildren| child.position.to_i }.each do |child, grandchildren|
     = render_admin_group_node child, :level => level + 1, :simple => simple, :children => grandchildren

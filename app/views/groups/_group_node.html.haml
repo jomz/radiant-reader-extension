@@ -2,5 +2,5 @@
   = link_to group.name, group.homepage.nil? ? group_url(group) : group.homepage.path
   - if children.any?
     %ul
-      - children.each do |child, grandchildren|
+      - children.sort_by{|child, grandchildren| child.position.to_i }.each do |child, grandchildren|
         = render_group_node child, :level => level + 1, :simple => simple, :children => grandchildren

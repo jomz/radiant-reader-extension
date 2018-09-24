@@ -1,11 +1,10 @@
 - chooser ||= @page
+- locals ||= {}
 - if chooser
   - disabled ||= false
 
   %ul
-    - Group.all.each do |group|
-      %li
-        - checked = chooser.has_group?(group)
-        = check_box_tag 'group_ids', group.id, checked, :id => "group_ids_#{group.id}", :disabled => disabled
-        %label{:for => "group_ids_#{group.id}", :class => 'checkbox'} 
-          = group.name
+    - Group.arrange.each do |group, children|
+      - @current_node = group
+      - locals.reverse_merge!(:level => 0, :simple => false).merge!(:group => group, :disabled => disabled, :chooser => chooser)
+      = render :partial => 'admin/groups/group_node_for_popup_chooser', :locals =>  locals

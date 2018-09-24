@@ -14,7 +14,7 @@ module GroupTags
     
     Note that because of limitations in radius this has to be done in a containing root tag:
     
-    <pre><code><r:group id="1"><r:group:url /></r;group></code></pre>
+    <pre><code><r:group id="1"><r:group:url /></r:group></code></pre>
   }
   tag 'group' do |tag|
     tag.locals.group = if tag.attr['id']

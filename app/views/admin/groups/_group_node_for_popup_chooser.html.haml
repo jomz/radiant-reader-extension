@@ -1,0 +1,11 @@
+%li
+  - checked = chooser.has_group?(group)
+  = check_box_tag 'group_ids', group.id, checked, :id => "group_ids_#{group.id}", :disabled => disabled
+  %label{:for => "group_ids_#{group.id}", :class => 'checkbox'}
+    = group.name
+- if group.children.any?
+  - locals ||= {}
+  %ul
+    - group.children.sort_by{|child, grandchildren| child.position.to_i }.each do |child, grandchildren|
+      - locals.merge!(:group => child, :level => level + 1, :chooser => chooser, :disabled => disabled)
+      = render :partial => 'admin/groups/group_node_for_popup_chooser', :locals =>  locals

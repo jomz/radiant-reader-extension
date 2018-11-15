@@ -28,9 +28,11 @@ class PasswordResetsController < ReaderActionController
     end  
   end
 
-  def edit  
-    unless @reader
-      flash[:error] = t('reader_extension.reset_not_found')
+  def edit
+    if logged_in?
+      flash[:error] = t('reader_extension.already_logged_in')
+    else
+      flash[:error] = t('reader_extension.reset_not_found') unless @reader
     end
     render
   end  

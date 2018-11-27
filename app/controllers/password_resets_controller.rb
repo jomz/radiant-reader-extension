@@ -7,11 +7,11 @@ class PasswordResetsController < ReaderActionController
   skip_before_filter :require_reader
   before_filter :get_reader, :only => [:edit, :update]
   radiant_layout { |controller| Radiant::Config['reader.layout'] }
-  
+
   def new
     render
   end
-  
+
   def create
     @forgetter = Reader.find_by_email(params[:email])
     if @forgetter
@@ -22,43 +22,43 @@ class PasswordResetsController < ReaderActionController
         @forgetter.send_activation_message
         redirect_to new_reader_activation_url
       end
-    else  
+    else
       @error = flash[:error] = t("reader_extension.email_unknown")
-      render :action => :new  
-    end  
+      render :action => :new
+    end
   end
 
   def edit
     if logged_in?
-      flash[:error] = t('reader_extension.already_logged_in')
+      @error = flash[:error] = t('reader_extension.already_logged_in')
     else
-      flash[:error] = t('reader_extension.reset_not_found') unless @reader
+      @error = flash[:error] = t('reader_extension.reset_not_found') unless @reader
     end
-    render
-  end  
+    render :action => :new
+  end
 
   def update
-    if @reader 
+    if @reader
       @reader.password = params[:reader][:password]
       @reader.password_confirmation = params[:reader][:password_confirmation]
-      if @reader.save 
+      if @reader.save
         self.current_reader = @reader
         flash[:notice] = t('reader_extension.password_updated_notice')
         redirect_to default_welcome_url(@reader)
       else
         flash[:error] = t('reader_extension.password_mismatch')
-        render :action => :edit 
-      end  
+        render :action => :edit
+      end
     else
       flash[:error] = t('reader_extension.reset_not_found')
       render :action => :edit     # without @reader, this will take us back to the enter-your-code form
     end
-  end  
+  end
 
-private  
+private
 
   def get_reader
     @reader = Reader.find_by_id_and_perishable_token(params[:id], params[:confirmation_code])
-  end  
+  end
 
 end

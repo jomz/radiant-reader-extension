@@ -1,6 +1,6 @@
 - content_for :breadcrumbs do
   = link_to t('reader_extension.home').titlecase, '/'
-  &gt; 
+  &gt;
   = t('reader_extension.reset_password').titlecase
 
 - content_for :title do
@@ -14,7 +14,7 @@
 
   - if @error
     %p.haserror
-      = t(@error)
+      = @error
 
   .password_form
     - email = current_reader.email if current_reader
@@ -27,7 +27,7 @@
 
       %p
         = submit_tag t('reader_extension.send_reset_button')
-  
+
 = render :partial => 'shared/standard_reader_parts'
 
 = yield :form

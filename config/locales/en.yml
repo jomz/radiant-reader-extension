@@ -47,7 +47,7 @@ en:
               blank: "please enter your email address"
               invalid: "this doesn't look like an email address"
               taken: "this address is already registered here"
-              taken_by_author: "this address belongs to an author here. You don't need to register here: just log in to admin."
+              taken_by_author: "this address belongs to an author here. You don't need to register here: just <a href='/membership/details'>log in to admin</a>."
             login:
               taken: "this login is already in use here"
             name:

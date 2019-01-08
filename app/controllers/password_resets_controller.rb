@@ -34,7 +34,7 @@ class PasswordResetsController < ReaderActionController
     else
       @error = flash[:error] = t('reader_extension.reset_not_found') unless @reader
     end
-    render :action => :new
+    render
   end
 
   def update

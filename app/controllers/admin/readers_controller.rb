@@ -20,10 +20,14 @@ class Admin::ReadersController < Admin::ResourceController
 
     def load_models
       base_scope = model_class
-      if params['q']
-        base_scope = base_scope.search(params['q'])
+      if params['names_equal']
+        self.models = base_scope.find(:all, :conditions => "surname = forename")
+      else
+        if params['q']
+          base_scope = base_scope.search(params['q'])
+        end
+        self.models = paginated? ? base_scope.paginate(pagination_parameters) : base_scope.all
       end
-      self.models = paginated? ? base_scope.paginate(pagination_parameters) : base_scope.all
     end
 
 

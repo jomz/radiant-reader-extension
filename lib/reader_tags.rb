@@ -204,10 +204,12 @@ module ReaderTags
     tag.expand
   end
   tag "reader_access:groups:each" do |tag|
+    result = []
     tag.locals.page.groups.each do |group|
       tag.locals.group = group
-      tag.expand
+      result << tag.expand
     end
+    result
   end
 
   desc %{

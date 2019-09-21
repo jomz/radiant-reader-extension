@@ -4,7 +4,7 @@ module ReaderTags
   include ActionView::Helpers::TextHelper
   include GroupTags
   include MessageTags
-  
+
   class TagError < StandardError; end
 
   ### standard reader css and javascript is just a starting point.
@@ -18,25 +18,25 @@ module ReaderTags
   end
 
   ### tags displaying the set of readers
-  
+
   desc %{
-    Cycles through the (paginated) list of readers available for display. You can do this on 
-    any page but if it's a ReaderPage you also get some access control and the ability to 
+    Cycles through the (paginated) list of readers available for display. You can do this on
+    any page but if it's a ReaderPage you also get some access control and the ability to
     click through to an individual reader.
-    
+
     Please note that if you use this tag on a normal radiant page, all registered readers
     will be displayed, regardless of group-based or other access limitations. You really
     want to keep this tag for ReaderPages and (soon) GroupPages.
-    
-    *Usage:* 
+
+    *Usage:*
     <pre><code><r:readers:each [limit=0] [offset=0] [order="asc|desc"] [by="position|title|..."] [extensions="png|pdf|doc"]>...</r:readers:each></code></pre>
-  }    
+  }
   tag 'readers' do |tag|
     tag.expand
   end
   tag 'readers:each' do |tag|
     tag.locals.readers = get_readers(tag)
-    
+
     Rails.logger.warn "readers:each: tlr has #{tag.locals.readers.size} readers"
     tag.render('reader_list', tag.attr.dup, &tag.block)
   end
@@ -68,9 +68,9 @@ module ReaderTags
     The root 'reader' tag is not meant to be called directly.
     All it does is summon a reader object so that its fields can be displayed with eg.
     <pre><code><r:reader:name /></code></pre>
-    
-    On a ReaderPage, this will be the reader designated by the url. 
-    
+
+    On a ReaderPage, this will be the reader designated by the url.
+
     Anywhere else, it will be the current reader (ie the one reading), provided
     we are on an uncached page.
   }
@@ -87,7 +87,7 @@ module ReaderTags
       tag.locals.reader.send(field) if tag.locals.reader
     end
   end
-  
+
   desc %{
     Displays the organisation recorded for the current reader.
     <pre><code><r:reader:organisation /></code></pre>
@@ -111,7 +111,7 @@ module ReaderTags
   tag "reader:unless_organisation" do |tag|
     tag.expand if tag.locals.reader.post_organisation.blank?
   end
-  
+
   desc %{
     Displays the full postal address recorded for the current reader.
     The 'newline' attribute defaults to a newline (\\n).
@@ -128,25 +128,25 @@ module ReaderTags
       tag.render('reader:post_country')
     end
   end
-  
+
   desc %{
     Displays the standard reader_welcome block, but only if a reader is present. For a block that shows an invitation to non-logged-in
     people, use @r:reader_welcome@
-    
+
     <pre><code><r:reader:controls /></code></pre>
   }
   tag "reader:controls" do |tag|
     # if there's no reader, the reader: stem will not expand to render this tag.
     tag.render('reader_welcome')
   end
-  
+
   desc %{
     Displays the standard block of reader controls: greeting, links to preferences, etc.
-    If there is no reader, this will show a 'login or register' invitation, provided the reader.allow_registration? config entry is true. 
+    If there is no reader, this will show a 'login or register' invitation, provided the reader.allow_registration? config entry is true.
     If you don't want that, use @r:reader:controls@ instead: the reader: prefix means it will only show when a reader is present.
-    
+
     If this tag appears on a cached page, we return an empty @<div class="remote_controls">@ suitable for ajaxing.
-    
+
     <pre><code><r:reader_welcome /></code></pre>
   }
   tag "reader_welcome" do |tag|
@@ -173,19 +173,55 @@ module ReaderTags
       end
     end
   end
-    
+
+  desc %{
+    Lists the groups that have access to the current page, or 'unrestricted' if applicable.
+
+    <pre><code><r:reader_access [unrestricted_string="everyone"] /></code></pre>
+
+    By default the group list is just strings joined by commas.
+    If you want to provide your own HTML you can iterate over r:groups in a double tag:
+
+    <pre><code><r:reader_access [unrestricted_string="everyone"]>
+      <r:groups:each>
+        <a href="<r:group:url/>"><r:group:name/></a>
+      </r:groups:each>
+    </r:reader_access></code></pre>
+
+  }
+  tag "reader_access" do |tag|
+    if tag.locals.page.groups.any?
+      if tag.double?
+        tag.expand
+      else
+        tag.locals.page.groups.map(&:name).join ','
+      end
+    else
+      tag.attr['unrestricted_string'] || 'unrestricted'
+    end
+  end
+  tag "reader_access:groups" do |tag|
+    tag.expand
+  end
+  tag "reader_access:groups:each" do |tag|
+    tag.locals.page.groups.each do |group|
+      tag.locals.group = group
+      tag.expand
+    end
+  end
+
   desc %{
     Expands if there is a reader and we are on an uncached page.
-    
+
     <pre><code><r:if_reader><div id="controls"><r:reader:controls /></r:if_reader></code></pre>
   }
   tag "if_reader" do |tag|
     tag.expand if get_reader(tag)
   end
-  
+
   desc %{
     Expands if there is no reader or we are on a cached page.
-    
+
     <pre><code><r:unless_reader>Please log in</r:unless_reader></code></pre>
   }
   tag "unless_reader" do |tag|
@@ -193,11 +229,11 @@ module ReaderTags
   end
 
   desc %{
-    Truncates the contained text or html to the specified length. Unless you supply a 
+    Truncates the contained text or html to the specified length. Unless you supply a
     html="true" parameter, all html tags will be removed before truncation. You probably
     don't want to do that: open tags will not be closed and the truncated
     text length will vary.
-    
+
     <pre><code>
       <r:truncated words="30"><r:content part="body" /></r:truncated>
       <r:truncated chars="100" omission=" (continued)"><r:post:body /></r:truncated>
@@ -215,7 +251,7 @@ module ReaderTags
       truncate_words(content, :length => tag.attr['words'].to_i, :omission => omission)   # defined in ReaderHelper
     end
   end
-  
+
   deprecated_tag "truncate", :substitute => "truncated"
 
 private
@@ -243,5 +279,5 @@ private
     })
     readers
   end
-  
+
 end

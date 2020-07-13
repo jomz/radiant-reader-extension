@@ -2,6 +2,11 @@
 - include_javascript('admin/reader')
 - body_classes << "reversed"
 
+- content_for 'page_css' do
+  - groups = Group.find(@message.reader_message_deliveries.map(&:target_group_ids))
+  - readers = groups.empty? ? [] : Reader.in_groups(groups)
+  = css_for_readers_groups readers
+
 = render_region :top
 
 - render_region :header do |header|
@@ -9,27 +14,27 @@
     %h1
       = t('reader_extension.preview_and_send_message')
 
-#preview
-  - render_region :preview do |preview|
-    - preview.headers do
-      .message_header
-        %ul
-          - @message.preview.each_header do |name, value|
-            %li{:class => name}
-              = "#{name}:"
-              %strong
-                = value
-
-    - preview.body do
-      .message_body
-        %iframe.message_body{:src => preview_admin_message_url(@message)}
-
-    - preview.buttons do
-      .preview_controls
-        %p
-          = link_to t('reader_extension.edit_message'), edit_admin_message_url(@message)
-          
 - form_for :message, @message, :url => deliver_admin_message_path(@message), :html => {"data-onsubmit_status"=>"Sending email messages&#8230;"} do |f|
+  #preview
+    - render_region :preview do |preview|
+      - preview.headers do
+        .message_header
+          %ul
+            - @message.preview.each_header do |name, value|
+              %li{:class => name}
+                = "#{name}:"
+                %strong
+                  = value
+
+      - preview.body do
+        .message_body
+          %iframe.message_body{:src => preview_admin_message_url(@message)}
+
+      - preview.buttons do
+        .preview_controls
+          %p
+            = link_to t('reader_extension.edit_message'), edit_admin_message_url(@message)
+
   #deliver
     - render_region :delivery do |delivery|
       - delivery.function do
@@ -84,7 +89,18 @@
                   = t('reader_extension.select_all')
               - Group.arrange.each do |group, children|
                 = render_message_group_node(group, :children => children)
-                
+  #deliveries{:style => "float: left; width: 70%; background-color: white; color: black; margin-top: 1em; box-shadow: 0px 0px 5px #333"}
+    %table.index{:summary => 'Deliveries', :cellspacing=>"0", :border=>"0", :cellpadding=>"0"}
+      %thead
+        %tr
+          %td Sent at
+          %td Targeted groups
+      %tbody
+        - @message.reader_message_deliveries.each do |delivery|
+          %tr
+            %td= delivery.created_at.strftime("%d %b %Y at %H:%M\"%S")
+            %td
+              = pretty_group_links(delivery.target_group_ids.map{|id| Group.find(id)})
   .clear
   %p.buttons
     = submit_tag t('reader_extension.send_message')

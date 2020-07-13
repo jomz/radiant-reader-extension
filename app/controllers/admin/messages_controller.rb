@@ -15,7 +15,7 @@ class Admin::MessagesController < Admin::ResourceController
   def show
 
   end
-  
+
   def destroy
     if @message
       @message.destroy
@@ -63,6 +63,7 @@ class Admin::MessagesController < Admin::ResourceController
         flash[:notice] = t("reader_extension.message_delivered")
       end
       @message.update_attribute :sent_at, Time.now
+      @message.reader_message_deliveries.create(:target_group_ids => @groups.map(&:id))
     end
     redirect_to admin_message_url(@message)
   end

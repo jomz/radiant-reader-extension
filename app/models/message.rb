@@ -8,6 +8,7 @@ class Message < ActiveRecord::Base
   belongs_to :updated_by, :class_name => 'User'
 
   has_many :deliveries, :class_name => 'MessageReader', :conditions => ["message_readers.sent_at IS NOT NULL and message_readers.sent_at <= ?", Time.now.to_s(:db)]
+  has_many :reader_message_deliveries # deliveries as above not useful for what we want.. :/
   has_many :recipients, :through => :deliveries, :source => :reader
 
   validates_presence_of :subject
@@ -59,7 +60,7 @@ class Message < ActiveRecord::Base
     reader ||= possible_readers.first || Reader.for_user(UserActionObserver.instance.current_user)
     ReaderNotifier.create_message(reader, self)
   end
-  
+
   def function
     MessageFunction[self.function_id]
   end
@@ -117,7 +118,7 @@ class Message < ActiveRecord::Base
   def delivered_to?(reader)
     recipients.include?(reader)
   end
-  
+
   def delivery_to(reader)
     deliveries.to_reader(reader).first if delivered_to?(reader)
   end
